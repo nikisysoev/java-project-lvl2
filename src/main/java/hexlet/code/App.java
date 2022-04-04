@@ -4,10 +4,11 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
+import java.util.concurrent.Callable;
 
 @Command(name = "gendiff", mixinStandardHelpOptions = true,
         description = "Compares two configuration files and shows a difference.")
-public class App implements Runnable {
+public class App implements Callable {
 
     @Option(names = { "-f", "--format" }, paramLabel = "format", description = "output format [default: stylish]")
     private String format = "stylish";
@@ -19,8 +20,10 @@ public class App implements Runnable {
     private String filePath2;
 
     @Override
-    public void run() {
-
+    public Object call() throws Exception {
+        String difference = Differ.generate(filePath1, filePath2);
+        System.out.println(difference);
+        return null;
     }
 
     public static void main(String[] args) {
