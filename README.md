@@ -5,3 +5,5 @@
 ![example workflow](https://github.com/nikisysoev/java-project-lvl2/actions/workflows/main.yml/badge.svg)
 
 [![asciicast](https://asciinema.org/a/484260.svg)](https://asciinema.org/a/484260)
+
+[![asciicast](https://asciinema.org/a/485797.svg)](https://asciinema.org/a/485797)

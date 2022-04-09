@@ -1,10 +1,6 @@
 package hexlet.code;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -13,49 +9,38 @@ public class Differ {
     private static final int ONLY_KEY = 3;
 
     public static String generate(String filePath1, String filePath2) throws IOException {
-        Path path1 = Paths.get(filePath1);
-        Path path2 = Paths.get(filePath2);
+        Map<String, Object> fileMap1 = Parser.getData(filePath1);
+        Map<String, Object> fileMap2 = Parser.getData(filePath2);
+        Map<String, Object> resultMap = compareData(fileMap1, fileMap2);
+        return Formatter.toString(resultMap);
+    }
 
-        ObjectMapper objectmapper = new ObjectMapper();
-        Map<String, Object> fileMap1 = objectmapper.readValue(path1.toFile(), new TypeReference<>() { });
-        Map<String, Object> fileMap2 = objectmapper.readValue(path2.toFile(), new TypeReference<>() { });
+    private static Map<String, Object> compareData(Map<String, Object> fileMap1, Map<String, Object> fileMap2) {
         Map<String, Object> utilityMap = new HashMap<>(fileMap2);
+        Map<String, Object> resultMap = new TreeMap<>(Differ::sort);
 
-        Map<String, Object> resultMap = new TreeMap<>((s, t1) -> {
-            String key1 = s.substring(ONLY_KEY);
-            String key2 = t1.substring(ONLY_KEY);
-
-            if (key1.equals(key2)) {
-                return 1;
-            }
-
-            return key1.compareTo(key2);
-        });
-
-        for (Map.Entry<String, Object> elem : fileMap1.entrySet()) {
+        for (Map.Entry<String, Object> pair : fileMap1.entrySet()) {
             String difference = " - ";
-
-            if (fileMap2.entrySet().contains(elem)) {
-                utilityMap.remove(elem.getKey());
+            if (fileMap2.entrySet().contains(pair)) {
+                utilityMap.remove(pair.getKey());
                 difference = "   ";
             }
-            resultMap.put(difference + elem.getKey(), elem.getValue());
+            resultMap.put(difference + pair.getKey(), pair.getValue());
         }
 
-        for (Map.Entry<String, Object> elem : utilityMap.entrySet()) {
-            resultMap.put(" + " + elem.getKey(), elem.getValue());
+        for (Map.Entry<String, Object> pair : utilityMap.entrySet()) {
+            resultMap.put(" + " + pair.getKey(), pair.getValue());
         }
+        return resultMap;
+    }
 
-        if (resultMap.isEmpty()) {
-            return resultMap.toString()
-                    .replace("{", "\n{")
-                    .replace("}", "\n}");
+    private static int sort(String key1, String key2) {
+        String keyWithoutSpaces1 = key1.substring(ONLY_KEY);
+        String keyWithoutSpaces2 = key2.substring(ONLY_KEY);
+
+        if (keyWithoutSpaces1.equals(keyWithoutSpaces2)) {
+            return 1;
         }
-
-        return resultMap.toString()
-               .replace("=", ": ")
-               .replace(",", "\n")
-               .replace("{", "\n{\n ")
-               .replace("}", "\n}");
+        return keyWithoutSpaces1.compareTo(keyWithoutSpaces2);
     }
 }
