@@ -6,7 +6,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 public class Differ {
-    private static final int ONLY_KEY = 3;
+    private static final int ONLY_KEY = 4;
 
     public static String generate(String filePath1, String filePath2) throws IOException {
         Map<String, Object> fileMap1 = Parser.getData(filePath1);
@@ -20,16 +20,16 @@ public class Differ {
         Map<String, Object> resultMap = new TreeMap<>(Differ::sort);
 
         for (Map.Entry<String, Object> pair : fileMap1.entrySet()) {
-            String difference = " - ";
+            String difference = "  - ";
             if (fileMap2.entrySet().contains(pair)) {
                 utilityMap.remove(pair.getKey());
-                difference = "   ";
+                difference = "    ";
             }
             resultMap.put(difference + pair.getKey(), pair.getValue());
         }
 
         for (Map.Entry<String, Object> pair : utilityMap.entrySet()) {
-            resultMap.put(" + " + pair.getKey(), pair.getValue());
+            resultMap.put("  + " + pair.getKey(), pair.getValue());
         }
         return resultMap;
     }

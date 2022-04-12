@@ -6,11 +6,12 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 import java.util.concurrent.Callable;
 
-@Command(name = "gendiff", mixinStandardHelpOptions = true,
+@Command(name = "gendiff", mixinStandardHelpOptions = true, version = "1.0",
         description = "Compares two configuration files and shows a difference.")
 public class App implements Callable {
 
-    @Option(names = { "-f", "--format" }, paramLabel = "format", description = "output format [default: stylish]")
+    @Option(names = { "-f", "--format" }, paramLabel = "format", defaultValue = "stylish",
+            description = "output format [default: ${DEFAULT-VALUE}]")
     private String format = "stylish";
 
     @Parameters(paramLabel = "filepath1", description = "path to first file")

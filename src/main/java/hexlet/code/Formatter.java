@@ -4,14 +4,16 @@ import java.util.Map;
 
 public class Formatter {
     public static String toString(Map<String, Object> resultMap) {
-        String result = resultMap.toString()
-                .replace("}", "\n}");
+        StringBuilder sb = new StringBuilder("\n{\n");
 
-        if (resultMap.isEmpty()) {
-            return result.replace("{", "\n{");
+        for (Map.Entry<String, Object> pair: resultMap.entrySet()) {
+            sb.append(pair.getKey())
+                    .append(": ")
+                    .append(pair.getValue())
+                    .append("\n");
         }
-        return result.replace("=", ": ")
-                .replace(",", "\n")
-                .replace("{", "\n{\n ");
+        sb.append("}");
+
+        return sb.toString();
     }
 }
