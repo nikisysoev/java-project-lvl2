@@ -18,8 +18,8 @@ class DifferTest {
     private static final List<Path> PATHS = new ArrayList<>();
     private static final Map<String, String> FILE_PATHS = new HashMap<>();
     static {
-        FILE_PATHS.put("src/test/resources/file1.json", "/home/nikita/java-project-lvl2/src/test/resources/file2.json");
-        FILE_PATHS.put("src/test/resources/file1.yml",  "/home/nikita/java-project-lvl2/src/test/resources/file2.yml");
+        FILE_PATHS.put("src/test/resources/file1.json", "src/test/resources/file2.json");
+        FILE_PATHS.put("src/test/resources/file1.yml",  "src/test/resources/file2.yml");
     }
 
     @BeforeAll
