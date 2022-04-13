@@ -21,6 +21,7 @@ class DifferTest {
         FILE_PATHS.put("src/test/resources/file1.json", "src/test/resources/file2.json");
         FILE_PATHS.put("src/test/resources/file1.yml",  "src/test/resources/file2.yml");
     }
+    private static final String[] FORMAT = {"stylish", "plain"};
 
     @BeforeAll
     static void getPath() {
@@ -104,7 +105,7 @@ class DifferTest {
                 """
         };
         writeDataToFiles(data);
-        String expected = """
+        String[] expected = {"""
 
                  {
                      chars1: [a, b, c]
@@ -130,84 +131,27 @@ class DifferTest {
                    + setting2: 300
                    - setting3: true
                    + setting3: none
-                 }""";
+                 }""", """
+
+                Property 'chars2' was updated. From [complex value] to false
+                Property 'checked' was updated. From false to true
+                Property 'default' was updated. From null to [complex value]
+                Property 'id' was updated. From 45 to null
+                Property 'key1' was removed
+                Property 'key2' was added with value: 'value2'
+                Property 'numbers2' was updated. From [complex value] to [complex value]
+                Property 'numbers3' was removed
+                Property 'numbers4' was added with value: [complex value]
+                Property 'obj1' was added with value: [complex value]
+                Property 'setting1' was updated. From 'Some value' to 'Another value'
+                Property 'setting2' was updated. From 200 to 300
+                Property 'setting3' was updated. From true to 'none'"""};
+
         for (Map.Entry<String, String> pair: FILE_PATHS.entrySet()) {
-            String actual = Differ.generate(pair.getKey(), pair.getValue());
-            assertEquals(expected, actual);
-        }
-    }
-
-    @Test
-    void whenFilesAreEmpty() throws IOException {
-        String[] data = {"""
-                {
-                }""", """
-                {
-                }""", "", ""
-        };
-        writeDataToFiles(data);
-        String expected = """
-
-                {
-                }""";
-        for (Map.Entry<String, String> pair: FILE_PATHS.entrySet()) {
-            String actual = Differ.generate(pair.getKey(), pair.getValue());
-            assertEquals(expected, actual);
-        }
-    }
-
-    @Test
-    void whenOneFileIsEmpty() throws IOException {
-        String[] data = {"""
-                {
-                  "setting1": "Some value",
-                  "setting2": 200,
-                  "setting3": true,
-                  "key1": "value1",
-                  "numbers1": [1, 2, 3, 4],
-                  "numbers2": [2, 3, 4, 5],
-                  "id": 45,
-                  "default": null,
-                  "checked": false,
-                  "numbers3": [3, 4, 5],
-                  "chars1": ["a", "b", "c"],
-                  "chars2": ["d", "e", "f"]
-                }""", """
-                {
-                }""", """
-                   setting1: Some value
-                   setting2: 200
-                   setting3: true
-                   key1: value1
-                   numbers1: [1, 2, 3, 4]
-                   numbers2: [2, 3, 4, 5]
-                   id: 45
-                   default: null
-                   checked: false
-                   numbers3: [3, 4, 5]
-                   chars1: [a, b, c]
-                   chars2: [d, e, f]""", ""
-        };
-        writeDataToFiles(data);
-        String expected = """
-
-                 {
-                   - chars1: [a, b, c]
-                   - chars2: [d, e, f]
-                   - checked: false
-                   - default: null
-                   - id: 45
-                   - key1: value1
-                   - numbers1: [1, 2, 3, 4]
-                   - numbers2: [2, 3, 4, 5]
-                   - numbers3: [3, 4, 5]
-                   - setting1: Some value
-                   - setting2: 200
-                   - setting3: true
-                 }""";
-        for (Map.Entry<String, String> pair: FILE_PATHS.entrySet()) {
-            String actual = Differ.generate(pair.getKey(), pair.getValue());
-            assertEquals(expected, actual);
+            for (int i = 0; i < FORMAT.length; i++) {
+                String actual = Differ.generate(pair.getKey(), pair.getValue(), FORMAT[i]);
+                assertEquals(expected[i], actual);
+            }
         }
     }
 

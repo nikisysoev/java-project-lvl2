@@ -1,19 +1,14 @@
 package hexlet.code;
 
+import formatter.Plain;
+import formatter.Stylish;
 import java.util.Map;
 
 public class Formatter {
-    public static String toString(Map<String, Object> resultMap) {
-        StringBuilder sb = new StringBuilder("\n{\n");
-
-        for (Map.Entry<String, Object> pair: resultMap.entrySet()) {
-            sb.append(pair.getKey())
-                    .append(": ")
-                    .append(pair.getValue())
-                    .append("\n");
+    public static String toString(Map<String, Object> resultMap, String format) {
+        if (format.equals("stylish")) {
+            return Stylish.toString(resultMap);
         }
-        sb.append("}");
-
-        return sb.toString();
+        return Plain.toString(resultMap);
     }
 }

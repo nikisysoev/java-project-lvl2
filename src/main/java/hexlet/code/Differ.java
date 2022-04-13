@@ -8,11 +8,11 @@ import java.util.TreeMap;
 public class Differ {
     private static final int ONLY_KEY = 4;
 
-    public static String generate(String filePath1, String filePath2) throws IOException {
+    public static String generate(String filePath1, String filePath2, String format) throws IOException {
         Map<String, Object> fileMap1 = Parser.getData(filePath1);
         Map<String, Object> fileMap2 = Parser.getData(filePath2);
         Map<String, Object> resultMap = compareData(fileMap1, fileMap2);
-        return Formatter.toString(resultMap);
+        return Formatter.toString(resultMap, format);
     }
 
     private static Map<String, Object> compareData(Map<String, Object> fileMap1, Map<String, Object> fileMap2) {
