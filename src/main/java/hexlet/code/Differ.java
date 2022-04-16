@@ -8,6 +8,7 @@ import java.util.TreeMap;
 public class Differ {
     private static final int ONLY_KEY = 4;
 
+
     public static String generate(String filePath1, String filePath2, String format) throws IOException {
         Map<String, Object> fileMap1 = Parser.getData(filePath1);
         Map<String, Object> fileMap2 = Parser.getData(filePath2);
