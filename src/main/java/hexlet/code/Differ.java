@@ -16,10 +16,7 @@ public class Differ {
     }
 
     public static String generate(String filePath1, String filePath2) throws IOException {
-        Map<String, Object> fileMap1 = Parser.getData(filePath1);
-        Map<String, Object> fileMap2 = Parser.getData(filePath2);
-        Map<String, Object> resultMap = compareData(fileMap1, fileMap2);
-        return Formatter.toString(resultMap, "stylish");
+        return generate(filePath1, filePath2, "stylish");
     }
 
     private static Map<String, Object> compareData(Map<String, Object> fileMap1, Map<String, Object> fileMap2) {
