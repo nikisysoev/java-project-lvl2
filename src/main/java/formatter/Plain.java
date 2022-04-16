@@ -8,7 +8,7 @@ public class Plain {
     private static final int ONLY_KEY = 4;
 
     public static String toString(Map<String, Object> resultMap) {
-        StringBuilder sb = new StringBuilder("\n");
+        StringBuilder sb = new StringBuilder();
         LinkedList<Map.Entry<String, Object>> list = new LinkedList<>(resultMap.entrySet());
         list.add(null);
 

@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class Stylish {
     public static String toString(Map<String, Object> resultMap) {
-        StringBuilder sb = new StringBuilder("\n{\n");
+        StringBuilder sb = new StringBuilder("{\n");
 
         for (Map.Entry<String, Object> pair: resultMap.entrySet()) {
             sb.append(pair.getKey())
