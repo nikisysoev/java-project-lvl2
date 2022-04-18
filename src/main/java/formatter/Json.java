@@ -8,23 +8,21 @@ import java.util.List;
 import java.util.Map;
 
 public class Json {
-    private static final int ONLY_KEY = 4;
-
     public static String toString(Map<String, Object> resultMap) throws JsonProcessingException {
         ObjectMapper objectMapper = new ObjectMapper();
         List<Map<String, Object>> resultList = new LinkedList<>();
-        List<Map.Entry<String, Object>> list = new LinkedList<>(resultMap.entrySet());
-        list.add(null);
+        List<Map.Entry<String, Object>> utilityList = new LinkedList<>(resultMap.entrySet());
+        utilityList.add(null);
 
-        for (int i = 0; i < list.size() - 1; i++) {
-            var pair1 = list.get(i);
-            var pair2 = list.get(i + 1);
+        for (int i = 0; i < utilityList.size() - 1; i++) {
+            var pair1 = utilityList.get(i);
+            var pair2 = utilityList.get(i + 1);
 
-            String key1 = getKey(pair1);
-            String key2 = getKey(pair2);
+            String key1 = Formats.getKey(pair1);
+            String key2 = Formats.getKey(pair2);
 
-            Object value1 = getValue(pair1);
-            Object value2 = getValue(pair2);
+            Object value1 = Formats.getValue(pair1);
+            Object value2 = Formats.getValue(pair2);
 
             Map<String, Object> map = new LinkedHashMap<>();
 
@@ -51,16 +49,16 @@ public class Json {
             resultList.add(map);
         }
 
-        String json = objectMapper.writeValueAsString(resultList);
+        String result = objectMapper.writeValueAsString(resultList);
 
-        return json;
+        return toJsonFormat(result);
     }
 
-    private static Object getValue(Map.Entry<String, Object> pair) {
-        return (pair != null) ? pair.getValue() : null;
-    }
-
-    private static String getKey(Map.Entry<String, Object> pair) {
-        return (pair != null) ? pair.getKey().substring(ONLY_KEY) : null;
+    private static String toJsonFormat(String result) {
+        return result.replace(":", ": ")
+                .replace(",", ", ")
+                .replace("}, {", "},\n{")
+                .replace("[{", "[\n{")
+                .replace("}]", "}\n]");
     }
 }

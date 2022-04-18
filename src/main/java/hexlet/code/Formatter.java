@@ -8,11 +8,10 @@ import java.util.Map;
 
 public class Formatter {
     public static String toString(Map<String, Object> resultMap, String format) throws JsonProcessingException {
-        if (format.equals("stylish")) {
-            return Stylish.toString(resultMap);
-        } else if (format.equals("plain")) {
-            return Plain.toString(resultMap);
-        }
-        return Json.toString(resultMap);
+        return switch (format) {
+            case "stylish" -> Stylish.toString(resultMap);
+            case "plain" -> Plain.toString(resultMap);
+            default -> Json.toString(resultMap);
+        };
     }
 }

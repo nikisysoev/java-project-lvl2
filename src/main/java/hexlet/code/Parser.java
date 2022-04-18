@@ -7,7 +7,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Parser {
@@ -17,10 +16,7 @@ public class Parser {
         Path path = Paths.get(getLocalFilePath(filePath));
         File file = path.toFile();
 
-        if (!isEmptyFile(file)) {
-            return objectmapper.readValue(file, new TypeReference<>() { });
-        }
-        return new HashMap<>();
+        return objectmapper.readValue(file, new TypeReference<>() { });
     }
 
     private static String getLocalFilePath(String filePath) {
@@ -32,9 +28,5 @@ public class Parser {
             return new ObjectMapper();
         }
         return new ObjectMapper(new YAMLFactory());
-    }
-
-    private static boolean isEmptyFile(File file) {
-        return file.length() == 0;
     }
 }

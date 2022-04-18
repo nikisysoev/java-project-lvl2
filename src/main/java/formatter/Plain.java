@@ -4,23 +4,21 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-public class Plain {
-    private static final int ONLY_KEY = 4;
-
+public class Plain  {
     public static String toString(Map<String, Object> resultMap) {
         StringBuilder sb = new StringBuilder();
-        LinkedList<Map.Entry<String, Object>> list = new LinkedList<>(resultMap.entrySet());
-        list.add(null);
+        LinkedList<Map.Entry<String, Object>> utilityList = new LinkedList<>(resultMap.entrySet());
+        utilityList.add(null);
 
-        for (int i = 0; i < list.size() - 1; i++) {
-            var pair1 = list.get(i);
-            var pair2 = list.get(i + 1);
+        for (int i = 0; i < utilityList.size() - 1; i++) {
+            var pair1 = utilityList.get(i);
+            var pair2 = utilityList.get(i + 1);
 
-            String key1 = getKey(pair1);
-            String key2 = getKey(pair2);
+            String key1 = Formats.getKey(pair1);
+            String key2 = Formats.getKey(pair2);
 
-            Object value1 = hideComplexValue(getValue(pair1));
-            Object value2 = hideComplexValue(getValue(pair2));
+            Object value1 = hideComplexValue(Formats.getValue(pair1));
+            Object value2 = hideComplexValue(Formats.getValue(pair2));
 
             if (key1.equals(key2)) {
                 sb.append("Property '" + key1 + "' was updated. From " + value1 + " to " + value2 + "\n");
@@ -41,13 +39,5 @@ public class Plain {
             return "[complex value]";
         }
         return value;
-    }
-
-    private static Object getValue(Map.Entry<String, Object> pair) {
-        return (pair != null) ? pair.getValue() : null;
-    }
-
-    private static String getKey(Map.Entry<String, Object> pair) {
-        return (pair != null) ? pair.getKey().substring(ONLY_KEY) : null;
     }
 }
