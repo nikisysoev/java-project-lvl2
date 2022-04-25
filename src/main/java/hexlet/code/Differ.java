@@ -58,27 +58,30 @@ public class Differ {
     }
 
     private static Map<String, Object> setUpFirstMap(Map.Entry<String, Object> pair, String status) {
+        Map<String, Object> map = new HashMap<>();
+
         if ("removed".equals(status)) {
-            return new HashMap<>() {{
-                put("key", pair.getKey());
-                put("oldvalue", pair.getValue());
-                put("status", status);
-            }};
+            map.put("key", pair.getKey());
+            map.put("oldvalue", pair.getValue());
+            map.put("status", status);
+            return map;
         }
-        return new HashMap<>() {{
-            put("key", pair.getKey());
-            put("oldvalue", pair.getValue());
-            put("newvalue", dataMap2.get(pair.getKey()));
-            put("status", status);
-            dataMap2.remove(pair.getKey());
-        }};
+
+        map.put("key", pair.getKey());
+        map.put("oldvalue", pair.getValue());
+        map.put("newvalue", dataMap2.get(pair.getKey()));
+        map.put("status", status);
+        dataMap2.remove(pair.getKey());
+
+        return map;
     }
 
     private static Map<String, Object> setUpSecondMap(Map.Entry<String, Object> pair) {
-        return new HashMap<>() {{
-            put("key", pair.getKey());
-            put("newvalue", pair.getValue());
-            put("status", "added");
-        }};
+        Map<String, Object> map = new HashMap<>();
+        map.put("key", pair.getKey());
+        map.put("newvalue", pair.getValue());
+        map.put("status", "added");
+
+        return map;
     }
 }

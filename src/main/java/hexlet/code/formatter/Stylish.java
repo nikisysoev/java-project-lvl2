@@ -21,6 +21,7 @@ public class Stylish {
                 }
                 case "removed" -> setUpString(map, "oldvalue", DIFFERENCE[1]);
                 case "added" -> setUpString(map, "newvalue", DIFFERENCE[2]);
+                default -> { }
             }
         }
         return sb.append("}").toString();

@@ -28,7 +28,7 @@ public class Sorter {
 
             listWithSortedMap.add(sortedMap);
         }
-       return listWithSortedMap;
+        return listWithSortedMap;
     }
 
     private static int compare(String key1, String key2) {

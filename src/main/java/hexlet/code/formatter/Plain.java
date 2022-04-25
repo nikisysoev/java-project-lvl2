@@ -18,6 +18,7 @@ public class Plain  {
                 case "updated" -> setUpUpdated(map);
                 case "removed" -> setUpRemoved(map);
                 case "added" -> setUpAdded(map);
+                default -> { }
             }
         }
         return sb.substring(0, sb.length() - 1);
