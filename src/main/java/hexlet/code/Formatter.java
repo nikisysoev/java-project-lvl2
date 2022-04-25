@@ -1,17 +1,18 @@
 package hexlet.code;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import formatter.Json;
-import formatter.Plain;
-import formatter.Stylish;
+import hexlet.code.formatter.Json;
+import hexlet.code.formatter.Plain;
+import hexlet.code.formatter.Stylish;
+import java.util.List;
 import java.util.Map;
 
 public class Formatter {
-    public static String toString(Map<String, Object> resultMap, String format) throws JsonProcessingException {
+    public static String toString(List<Map<String, Object>> resultList, String format) throws JsonProcessingException {
         return switch (format) {
-            case "stylish" -> Stylish.toString(resultMap);
-            case "plain" -> Plain.toString(resultMap);
-            default -> Json.toString(resultMap);
+            case "stylish" -> Stylish.toString(resultList);
+            case "plain" -> Plain.toString(resultList);
+            default -> Json.toString(resultList);
         };
     }
 }

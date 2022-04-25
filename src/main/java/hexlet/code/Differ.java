@@ -1,54 +1,84 @@
 package hexlet.code;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
 
 public class Differ {
     private static final String STYLISH = "stylish";
-    private static final String[] DIFFERENCE = {"  - ", "    ", "  + "};
+    private static Map<String, Object> dataMap1;
+    private static Map<String, Object> dataMap2;
 
     public static String generate(String filePath1, String filePath2, String format) throws IOException {
-        Map<String, Object> fileMap1 = Parser.getData(filePath1);
-        Map<String, Object> fileMap2 = Parser.getData(filePath2);
+        String data1 = FileReader.getData(filePath1);
+        String data2 = FileReader.getData(filePath2);
 
-        Map<String, Object> resultMap = compareData(fileMap1, fileMap2);
+        String fileType1 = FileReader.getFileType(filePath1);
+        String fileType2 = FileReader.getFileType(filePath2);
 
-        return Formatter.toString(resultMap, format);
+        dataMap1 = Parser.parse(data1, fileType1);
+        dataMap2 = Parser.parse(data2, fileType2);
+
+        List<Map<String, Object>> resultList = compareDataMaps();
+
+        return Formatter.toString(resultList, format);
     }
 
     public static String generate(String filePath1, String filePath2) throws IOException {
         return generate(filePath1, filePath2, STYLISH);
     }
 
-    private static Map<String, Object> compareData(Map<String, Object> fileMap1, Map<String, Object> fileMap2) {
-        Map<String, Object> utilityMap = new HashMap<>(fileMap2);
-        Map<String, Object> resultMap = new TreeMap<>(Differ::sort);
+    private static List<Map<String, Object>> compareDataMaps() {
+        List<Map<String, Object>> resultList = new ArrayList<>();
 
-        for (Map.Entry<String, Object> pair : fileMap1.entrySet()) {
-            String difference = DIFFERENCE[0];
-            if (fileMap2.entrySet().contains(pair)) {
-                utilityMap.remove(pair.getKey());
-                difference = DIFFERENCE[1];
-            }
-            resultMap.put(difference + pair.getKey(), pair.getValue());
-        }
+        iterateFirstMap(resultList);
+        iterateSecondMap(resultList);
 
-        for (Map.Entry<String, Object> pair : utilityMap.entrySet()) {
-            resultMap.put(DIFFERENCE[2] + pair.getKey(), pair.getValue());
-        }
-
-        return resultMap;
+        return resultList;
     }
 
-    private static int sort(String key1, String key2) {
-        String elem1 = Utility.removeSpaces(key1);
-        String elem2 = Utility.removeSpaces(key2);
-
-        if (elem1.equals(elem2)) {
-            return 1;
+    private static void iterateFirstMap(List<Map<String, Object>> resultList) {
+        for (Map.Entry<String, Object> pair: dataMap1.entrySet()) {
+            if (!dataMap2.containsKey(pair.getKey())) {
+                resultList.add(setUpFirstMap(pair, "removed"));
+            } else if (dataMap2.entrySet().contains(pair)) {
+                resultList.add(setUpFirstMap(pair, "unchanged"));
+            } else {
+                resultList.add(setUpFirstMap(pair, "updated"));
+            }
         }
-        return elem1.compareTo(elem2);
+    }
+
+    private static void iterateSecondMap(List<Map<String, Object>> resultList) {
+        for (Map.Entry<String, Object> pair: dataMap2.entrySet()) {
+            resultList.add(setUpSecondMap(pair));
+        }
+    }
+
+    private static Map<String, Object> setUpFirstMap(Map.Entry<String, Object> pair, String status) {
+        if ("removed".equals(status)) {
+            return new HashMap<>() {{
+                put("key", pair.getKey());
+                put("oldvalue", pair.getValue());
+                put("status", status);
+            }};
+        }
+        return new HashMap<>() {{
+            put("key", pair.getKey());
+            put("oldvalue", pair.getValue());
+            put("newvalue", dataMap2.get(pair.getKey()));
+            put("status", status);
+            dataMap2.remove(pair.getKey());
+        }};
+    }
+
+    private static Map<String, Object> setUpSecondMap(Map.Entry<String, Object> pair) {
+        return new HashMap<>() {{
+            put("key", pair.getKey());
+            put("newvalue", pair.getValue());
+            put("status", "added");
+        }};
     }
 }
