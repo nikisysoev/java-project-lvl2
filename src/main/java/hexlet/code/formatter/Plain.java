@@ -1,6 +1,5 @@
 package hexlet.code.formatter;
 
-import hexlet.code.Sorter;
 import java.util.List;
 import java.util.Map;
 
@@ -9,7 +8,6 @@ public class Plain  {
 
     public static String toString(List<Map<String, Object>> resultList) {
         sb = new StringBuilder();
-        Sorter.sortList(resultList);
 
         for (Map<String, Object> map: resultList) {
             setUpString(map);

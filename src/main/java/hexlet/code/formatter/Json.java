@@ -2,17 +2,13 @@ package hexlet.code.formatter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import hexlet.code.Sorter;
 import java.util.List;
 import java.util.Map;
 
 public class Json {
     public static String toString(List<Map<String, Object>> resultList) throws JsonProcessingException {
-        List<Map<String, Object>> listWithSortedMap = Sorter.sortMapInList(resultList);
-        Sorter.sortList(listWithSortedMap);
-
         ObjectMapper objectMapper = new ObjectMapper();
-        String result = objectMapper.writeValueAsString(listWithSortedMap);
+        String result = objectMapper.writeValueAsString(resultList);
 
         return toJsonFormat(result);
     }

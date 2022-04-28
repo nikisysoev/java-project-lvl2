@@ -1,6 +1,5 @@
 package hexlet.code.formatter;
 
-import hexlet.code.Sorter;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +9,6 @@ public class Stylish {
 
     public static String toString(List<Map<String, Object>> resultList) {
         sb = new StringBuilder("{\n");
-        Sorter.sortList(resultList);
 
         for (Map<String, Object> map: resultList) {
             switch ((String) map.get("status")) {

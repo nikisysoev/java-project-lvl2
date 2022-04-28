@@ -1,41 +1,36 @@
 package hexlet.code;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.params.provider.Arguments.arguments;
 
 class DifferTest {
-    private static final Map<String, String> SOURCE_FILES = new HashMap<>();
-    static {
-        SOURCE_FILES.put("src/test/resources/file1.json", "src/test/resources/file2.json");
-        SOURCE_FILES.put("src/test/resources/file1.yml",  "src/test/resources/file2.yml");
+    static Stream<Arguments> pathFileAndFormatProvider() {
+        return Stream.of(
+                arguments("src/test/resources/file1.json", "src/test/resources/file2.json",
+                        "src/test/resources/expected1", "stylish"),
+                arguments("src/test/resources/file1.yml", "src/test/resources/file2.yml",
+                        "src/test/resources/expected2", "plain"),
+                arguments("src/test/resources/file1.json", "src/test/resources/file2.json",
+                        "src/test/resources/expected3", "json")
+        );
     }
 
-    private static final Map<String, String> EXPECTED_RESULTS = new HashMap<>();
-    static {
-        EXPECTED_RESULTS.put("src/test/resources/expected1", "stylish");
-        EXPECTED_RESULTS.put("src/test/resources/expected2",  "plain");
-        EXPECTED_RESULTS.put("src/test/resources/expected3",  "json");
-    }
+    @ParameterizedTest
+    @MethodSource("pathFileAndFormatProvider")
+    void whenFilesAreNotEmpty(String pathFile1, String pathFile2, String resultPath, String format) throws IOException {
+        Path path = Paths.get(resultPath);
 
-    @Test
-    void whenFilesAreNotEmpty() throws IOException {
-        for (Map.Entry<String, String> pairPaths: SOURCE_FILES.entrySet()) {
+        String expected = Files.readString(path);
+        String actual = Differ.generate(pathFile1, pathFile2, format);
 
-            for (Map.Entry<String, String> pathsAndFormats: EXPECTED_RESULTS.entrySet()) {
-
-                Path path = Paths.get(pathsAndFormats.getKey());
-                String expected = Files.readString(path);
-
-                String actual = Differ.generate(pairPaths.getKey(), pairPaths.getValue(), pathsAndFormats.getValue());
-
-                assertEquals(expected, actual);
-            }
-        }
+        assertEquals(expected, actual);
     }
 }
